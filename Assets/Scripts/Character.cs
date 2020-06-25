@@ -61,6 +61,11 @@ public class Character : MonoBehaviour
     bool RunTowards(Vector3 targetPosition, float distanceFromTarget)
     {
         Vector3 distance = targetPosition - transform.position;
+        if (distance.magnitude < 0.00001f) {
+            transform.position = targetPosition;
+            return true;
+        }
+
         Vector3 direction = distance.normalized;
         transform.rotation = Quaternion.LookRotation(direction);
 
