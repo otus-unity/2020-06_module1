@@ -12,7 +12,18 @@ public class CharacterAnimationEvents : MonoBehaviour
         character = GetComponentInParent<Character>();
     }
 
+    void DoDamage()
+    {
+        Character targetCharacter = character.target.GetComponent<Character>();
+        targetCharacter.DoDamage();
+    }
+
     void AttackEnd()
+    {
+        character.SetState(Character.State.RunningFromEnemy);
+    }
+
+    void PunchEnd()
     {
         character.SetState(Character.State.RunningFromEnemy);
     }
