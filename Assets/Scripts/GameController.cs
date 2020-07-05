@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    public CanvasGroup buttonsCanvasGroup;
+    public Button switchButton;
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
     Character currentTarget;
@@ -12,17 +15,16 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        switchButton.onClick.AddListener(NextTarget);
         StartCoroutine(GameLoop());
     }
 
-    [ContextMenu("Player Attack")]
-    void PlayerAttack()
+    public void PlayerAttack()
     {
         waitingForInput = false;
     }
 
-    [ContextMenu("Next Target")]
-    void NextTarget()
+    public void NextTarget()
     {
         for (int i = 0; i < enemyCharacters.Length; i++) {
             // Найти текущего персонажа (i = индекс текущего)
@@ -95,6 +97,8 @@ public class GameController : MonoBehaviour
 
     IEnumerator GameLoop()
     {
+        Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, false);
+
         while (!CheckEndGame()) {
             foreach (var player in playerCharacters) {
                 if (player.IsDead())
@@ -106,9 +110,11 @@ public class GameController : MonoBehaviour
 
                 currentTarget.targetIndicator.gameObject.SetActive(true);
 
+                Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, true);
                 waitingForInput = true;
                 while (waitingForInput)
                     yield return null;
+                Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, false);
 
                 currentTarget.targetIndicator.gameObject.SetActive(false);
 
