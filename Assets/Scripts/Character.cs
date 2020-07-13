@@ -36,6 +36,8 @@ public class Character : MonoBehaviour
     Vector3 originalPosition;
     Quaternion originalRotation;
     Health health;
+    HealthIndicator healthIndicator;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -46,6 +48,7 @@ public class Character : MonoBehaviour
         originalRotation = transform.rotation;
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>();
+        healthIndicator = GetComponentInChildren<HealthIndicator>();
     }
 
     public bool IsIdle()
@@ -97,6 +100,7 @@ public class Character : MonoBehaviour
 
             case Weapon.Pistol:
                 state = State.BeginShoot;
+                
                 break;
         }
     }
@@ -150,6 +154,8 @@ public class Character : MonoBehaviour
 
             case State.BeginAttack:
                 animator.SetTrigger("MeleeAttack");
+                var meleeEffect = target.GetComponent<BloodEffectBehaviour>();
+                meleeEffect.PLayEffect();
                 state = State.Attack;
                 break;
 
@@ -158,10 +164,15 @@ public class Character : MonoBehaviour
 
             case State.BeginShoot:
                 animator.SetTrigger("Shoot");
+                var shootEffect = target.GetComponent<BloodEffectBehaviour>();
+                shootEffect.PLayEffect();
+                StartCoroutine(nameof(OnCompleteAttackAnimation));
+                
                 state = State.Shoot;
                 break;
 
             case State.Shoot:
+                
                 break;
 
             case State.BeginPunch:
@@ -180,11 +191,23 @@ public class Character : MonoBehaviour
 
             case State.BeginDying:
                 animator.SetTrigger("Death");
+                
                 state = State.Dead;
                 break;
 
             case State.Dead:
+                healthIndicator.gameObject.SetActive(false);
                 break;
         }
+
+        
+    }
+
+    IEnumerator OnCompleteAttackAnimation()
+    {
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f);
+
+        var fireEffect = GetComponent<FireEffectBehaviour>();
+        fireEffect.PlayFireEffect();
     }
 }
