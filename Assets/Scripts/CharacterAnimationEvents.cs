@@ -14,11 +14,13 @@ public class CharacterAnimationEvents : MonoBehaviour
 
     void AttackEnd()
     {
+        character.target.GetComponentInParent<Character>().SetState(Character.State.Death);
         character.SetState(Character.State.RunningFromEnemy);
     }
 
     void ShootEnd()
     {
+        character.target.GetComponentInParent<Character>().SetState(Character.State.Death);
         character.SetState(Character.State.Idle);
     }
 }

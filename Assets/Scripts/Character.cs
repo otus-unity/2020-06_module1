@@ -14,6 +14,7 @@ public class Character : MonoBehaviour
         BeginShoot,
         Shoot,
         Death,
+        EndOfTheGame,
     }
 
     public enum Weapon
@@ -42,6 +43,11 @@ public class Character : MonoBehaviour
 
     public void SetState(State newState)
     {
+        if (state == State.EndOfTheGame)
+        {
+            return;
+        }
+
         state = newState;
     }
 
@@ -52,10 +58,12 @@ public class Character : MonoBehaviour
         {
             case Weapon.Bat:
                 state = State.RunningToEnemy;
+
                 break;
 
             case Weapon.Pistol:
                 state = State.BeginShoot;
+
                 break;
         }
     }
@@ -114,6 +122,11 @@ public class Character : MonoBehaviour
                 state = State.Shoot;
                 break;
 
+            case State.Death:
+                animator.SetTrigger("Death");
+                state = State.EndOfTheGame;
+                break;
+            
             case State.Shoot:
                 break;
 
