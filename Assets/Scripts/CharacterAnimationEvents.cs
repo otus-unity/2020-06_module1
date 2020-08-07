@@ -5,22 +5,30 @@ using UnityEngine;
 public class CharacterAnimationEvents : MonoBehaviour
 {
     Character character;
+    Character target;
 
     // Start is called before the first frame update
     void Start()
     {
         character = GetComponentInParent<Character>();
+        target = character.target.GetComponent<Character>();
     }
 
     void AttackEnd()
     {
-        character.target.GetComponentInParent<Character>().SetState(Character.State.Death);
+        target.SetState(Character.State.BeginDeath);
         character.SetState(Character.State.RunningFromEnemy);
     }
 
+    void PunchEnd()
+    {
+        target.SetState(Character.State.BeginDeath);
+        character.SetState(Character.State.RunningFromEnemy);
+    }
+    
     void ShootEnd()
     {
-        character.target.GetComponentInParent<Character>().SetState(Character.State.Death);
+        target.SetState(Character.State.BeginDeath);
         character.SetState(Character.State.Idle);
     }
 }

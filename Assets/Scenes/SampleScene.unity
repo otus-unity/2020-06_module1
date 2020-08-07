@@ -2569,6 +2569,21 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 553622527}
+    - target: {fileID: 7053335385835233256, guid: ec4b6a0b6924a2e419f93c7a483c42f1,
+        type: 3}
+      propertyPath: weapon
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7053335385835233256, guid: ec4b6a0b6924a2e419f93c7a483c42f1,
+        type: 3}
+      propertyPath: runSpeed
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 7053335385835233256, guid: ec4b6a0b6924a2e419f93c7a483c42f1,
+        type: 3}
+      propertyPath: distanceFromEnemy
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7649634686476563421, guid: ec4b6a0b6924a2e419f93c7a483c42f1,
         type: 3}
       propertyPath: m_Name
@@ -2597,6 +2612,11 @@ PrefabInstance:
         type: 3}
       propertyPath: damage
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 141842781104852185, guid: 9f6b6093c8242ac4bb871ec8bf4649c5,
+        type: 3}
+      propertyPath: weapon
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 737851862398705900, guid: 9f6b6093c8242ac4bb871ec8bf4649c5,
         type: 3}

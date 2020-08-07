@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,11 @@ public class Character : MonoBehaviour
         RunningFromEnemy,
         BeginAttack,
         Attack,
+        BeginPunch,
+        Punch,
         BeginShoot,
         Shoot,
+        BeginDeath,
         Death,
         EndOfTheGame,
     }
@@ -21,6 +25,7 @@ public class Character : MonoBehaviour
     {
         Pistol,
         Bat,
+        Punch,
     }
 
     public Weapon weapon;
@@ -43,7 +48,7 @@ public class Character : MonoBehaviour
 
     public void SetState(State newState)
     {
-        if (state == State.EndOfTheGame)
+        if (state == State.Death)
         {
             return;
         }
@@ -56,6 +61,7 @@ public class Character : MonoBehaviour
     {
         switch (weapon) 
         {
+            case Weapon.Punch:
             case Weapon.Bat:
                 state = State.RunningToEnemy;
 
@@ -96,6 +102,7 @@ public class Character : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log(state.ToString());
         switch (state) 
         {
             case State.Idle:
@@ -105,8 +112,19 @@ public class Character : MonoBehaviour
 
             case State.RunningToEnemy:
                 animator.SetFloat("Speed", runSpeed);
-                if (RunTowards(target.position, distanceFromEnemy))
-                    state = State.BeginAttack;
+                if (RunTowards(target.position, distanceFromEnemy)) 
+                {
+                    switch (weapon) 
+                    {
+                        case Weapon.Bat:
+                            state = State.BeginAttack;
+                            break;
+
+                        case Weapon.Punch:
+                            state = State.BeginPunch;
+                            break;
+                    }
+                }
                 break;
 
             case State.BeginAttack:
@@ -116,17 +134,20 @@ public class Character : MonoBehaviour
 
             case State.Attack:
                 break;
+            
+            case State.BeginPunch:
+                animator.SetTrigger("Punch");
+                state = State.Punch;
+                break;
+
+            case State.Punch:
+                break;
 
             case State.BeginShoot:
                 animator.SetTrigger("Shoot");
                 state = State.Shoot;
                 break;
 
-            case State.Death:
-                animator.SetTrigger("Death");
-                state = State.EndOfTheGame;
-                break;
-            
             case State.Shoot:
                 break;
 
@@ -134,6 +155,14 @@ public class Character : MonoBehaviour
                 animator.SetFloat("Speed", runSpeed);
                 if (RunTowards(originalPosition, 0.0f))
                     state = State.Idle;
+                break;
+            
+            case State.BeginDeath:
+                animator.SetTrigger("Death");
+                state = State.Death;
+                break;
+
+            case State.Death:
                 break;
         }
     }
