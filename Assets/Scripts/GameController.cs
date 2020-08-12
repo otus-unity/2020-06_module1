@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,10 +64,11 @@ public class GameController : MonoBehaviour
 
     Character FirstAliveCharacter(Character[] characters)
     {
-        foreach (var character in characters) {
+        foreach (var character in characters.Where(x => x != null)) {
             if (!character.IsDead())
                 return character;
         }
+
         return null;
     }
 
@@ -100,7 +102,7 @@ public class GameController : MonoBehaviour
         Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, false);
 
         while (!CheckEndGame()) {
-            foreach (var player in playerCharacters) {
+            foreach (var player in playerCharacters.Where(x => x != null)) {
                 if (player.IsDead())
                     continue;
 
@@ -124,7 +126,7 @@ public class GameController : MonoBehaviour
                     yield return null;
             }
 
-            foreach (var enemy in enemyCharacters) {
+            foreach (var enemy in enemyCharacters.Where(x => x != null)) {
                 if (enemy.IsDead())
                     continue;
 
