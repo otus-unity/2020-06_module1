@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
     Character currentTarget;
-    bool waitingForInput;
+    private bool waitingForInput;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +75,11 @@ public class GameController : MonoBehaviour
     void PlayerWon()
     {
         Debug.Log("Player won");
+    }
+    
+    IEnumerator WaitOnFinalScreen(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
 
     void PlayerLost()
