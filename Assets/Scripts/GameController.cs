@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -10,12 +11,14 @@ public class GameController : MonoBehaviour
     public Button switchButton;
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
+    [SerializeField] private CanvasGroup gameMenu;
     Character currentTarget;
     private bool waitingForInput;
 
     // Start is called before the first frame update
     void Start()
     {
+        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: false);
         switchButton.onClick.AddListener(NextTarget);
         StartCoroutine(GameLoop());
     }
@@ -27,31 +30,35 @@ public class GameController : MonoBehaviour
 
     public void NextTarget()
     {
-        for (int i = 0; i < enemyCharacters.Length; i++) {
+        var characters = enemyCharacters
+            .Where(x => x != null)
+            .ToArray();
+        
+        for (int i = 0; i < characters.Length; i++) {
             // Найти текущего персонажа (i = индекс текущего)
-            if (enemyCharacters[i] == currentTarget) {
+            if (characters[i] == currentTarget) {
                 int start = i;
                 ++i;
                 // Идем в сторону конца массива и ищем живого персонажа
-                for (; i < enemyCharacters.Length; i++) {
-                    if (enemyCharacters[i].IsDead())
+                for (; i < characters.Length; i++) {
+                    if (characters[i].IsDead())
                         continue;
 
                     // Нашли живого, меняем currentTarget
                     currentTarget.targetIndicator.gameObject.SetActive(false);
-                    currentTarget = enemyCharacters[i];
+                    currentTarget = characters[i];
                     currentTarget.targetIndicator.gameObject.SetActive(true);
 
                     return;
                 }
                 // Идем от начала массива до текущего и смотрим, если там кто живой
                 for (i = 0; i < start; i++) {
-                    if (enemyCharacters[i].IsDead())
+                    if (characters[i].IsDead())
                         continue;
 
                     // Нашли живого, меняем currentTarget
                     currentTarget.targetIndicator.gameObject.SetActive(false);
-                    currentTarget = enemyCharacters[i];
+                    currentTarget = characters[i];
                     currentTarget.targetIndicator.gameObject.SetActive(true);
 
                     return;
@@ -102,6 +109,29 @@ public class GameController : MonoBehaviour
         return false;
     }
 
+    public void OpenMenu()
+    {
+        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: true);
+        Utility.SetCanvasGroupEnabled(@group: buttonsCanvasGroup, enabled: false);
+    }
+
+    public void Continue()
+    {
+        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: false);
+        Utility.SetCanvasGroupEnabled(@group: buttonsCanvasGroup, enabled: true);
+    }
+
+    public void Restart()
+    {
+        var currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+    
     IEnumerator GameLoop()
     {
         Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, false);
