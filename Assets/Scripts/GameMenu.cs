@@ -5,10 +5,12 @@ public class GameMenu : MonoBehaviour
 {
     [SerializeField] private CanvasGroup gameMenu;
     [SerializeField] private CanvasGroup buttonsCanvasGroup;
+    [SerializeField] private CanvasGroup finalPopup;
 
     private void Start()
     {
         Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: false);
+        Utility.SetCanvasGroupEnabled(@group: finalPopup, enabled: false);
     }
 
     public void OpenMenu()

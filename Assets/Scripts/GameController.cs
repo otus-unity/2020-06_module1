@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public CanvasGroup buttonsCanvasGroup;
+    public CanvasGroup finalPopup;
     public Button switchButton;
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
@@ -80,12 +81,12 @@ public class GameController : MonoBehaviour
 
     void PlayerWon()
     {
-        Debug.Log("Player won");
+        Utility.SetCanvasGroupEnabled(finalPopup, true);
     }
 
     void PlayerLost()
     {
-        Debug.Log("Player lost");
+        Utility.SetCanvasGroupEnabled(finalPopup, true);
     }
 
     bool CheckEndGame()
