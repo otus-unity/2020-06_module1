@@ -11,14 +11,13 @@ public class GameController : MonoBehaviour
     public Button switchButton;
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
-    [SerializeField] private CanvasGroup gameMenu;
+
     Character currentTarget;
     private bool waitingForInput;
 
     // Start is called before the first frame update
     void Start()
     {
-        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: false);
         switchButton.onClick.AddListener(NextTarget);
         StartCoroutine(GameLoop());
     }
@@ -83,11 +82,6 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Player won");
     }
-    
-    IEnumerator WaitOnFinalScreen(float time)
-    {
-        yield return new WaitForSeconds(time);
-    }
 
     void PlayerLost()
     {
@@ -109,29 +103,6 @@ public class GameController : MonoBehaviour
         return false;
     }
 
-    public void OpenMenu()
-    {
-        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: true);
-        Utility.SetCanvasGroupEnabled(@group: buttonsCanvasGroup, enabled: false);
-    }
-
-    public void Continue()
-    {
-        Utility.SetCanvasGroupEnabled(@group: gameMenu, enabled: false);
-        Utility.SetCanvasGroupEnabled(@group: buttonsCanvasGroup, enabled: true);
-    }
-
-    public void Restart()
-    {
-        var currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
-    }
-
-    public void Exit()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-    
     IEnumerator GameLoop()
     {
         Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, false);
